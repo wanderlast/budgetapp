@@ -1,12 +1,19 @@
 package com.teamfrugal.budgetapp;
 
 import android.content.Context;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Matcher;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Created by Matthew on 9/30/2016.
@@ -20,7 +27,6 @@ public class cameraOCR extends SurfaceView implements SurfaceHolder.Callback{
         super(context);
         ocrCamera = camera;
         ocrCamera.setDisplayOrientation(90);
-
         // Install a SurfaceHolder.Callback so we get notifed when the
         // underlying surface is created and destroyed.
         ocrHolder = getHolder();
@@ -62,6 +68,19 @@ public class cameraOCR extends SurfaceView implements SurfaceHolder.Callback{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        ocrCamera.setPreviewCallback(new Camera.PreviewCallback() {
+            @Override
+            public void onPreviewFrame(byte[] data, Camera camera) {
+                Camera.Parameters p = camera.getParameters();
+                int height = p.getPreviewSize().height;
+                int width = p.getPreviewSize().width;
+
+                YuvImage y = new YuvImage(data, p.getPictureFormat(), width, height, null);
+
+
+            }
+        });
     }
 
     @Override

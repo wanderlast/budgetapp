@@ -2,48 +2,42 @@ package com.teamfrugal.budgetapp;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.SurfaceTexture;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 import static com.teamfrugal.budgetapp.R.id.camera;
 
 public class cameraActivity extends AppCompatActivity {
     /** Check if this device has a camera */
-    private boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    public static Camera getCameraInstance() {
-        Camera camera = null;
-        try {
-            camera = Camera.open();
-        }
-        catch (Exception e) {
-
-        }
-        return camera;
-    }
     private FrameLayout preview;
     private Camera ocrCamera = null;
     private cameraOCR ocrPreview = null;
+    private int flashOn = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.getBackground().setAlpha(1);
+
 
         try {
             ocrCamera = Camera.open();
@@ -74,12 +68,39 @@ public class cameraActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, error, duration);
             toast.show();
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("New Reciept");
-
+       // getSupportActionBar().setTitle("New Reciept");
+        //toolbar.getBackground().setAlpha(0);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_camera, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Camera.Parameters p = ocrCamera.getParameters();
+        if (id == R.id.torch) {
+            if (flashOn == 1) {
+                if (p.getSupportedFlashModes().contains(Camera.Parameters.FLASH_MODE_OFF)) {
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    ocrCamera.setParameters(p);
+                }
+                flashOn = 0;
+            } else {
+                if (p.getSupportedFlashModes().contains(Camera.Parameters.FLASH_MODE_TORCH)) {
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                    ocrCamera.setParameters(p);
+                }
+                flashOn = 1;
+            }
+        }
+        return false;
+    }
 }
