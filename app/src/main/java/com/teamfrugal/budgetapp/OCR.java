@@ -13,6 +13,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * Class:           OCR
+ * Desc:            This class is used to interface with the OCR library. It also uses functions
+ *                  found on a tutorial to put the eng.traineddata in place if it's missing.
+ * Related layout:  N/A
+ * Called from:     cameraOCR.java
+ * Calls:           N/A
+ */
+
+
 public class OCR {
     private TessBaseAPI mTess;
     private String datapath = "";

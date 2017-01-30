@@ -12,7 +12,14 @@ import static android.R.attr.x;
 import static android.R.attr.y;
 
 /**
- * Created by Matthew on 11/25/2016.
+ * Class:           OcrBox.java
+ * Desc:            This class is used to draw a box on the screen and will support functions to
+ *                  move and scale the box. Currently only move is implemented, but it has some
+ *                  bugs that need to be worked out.
+ * Related Layout:  N/A
+ * Called from:     cameraActivity.java <---- Need to remove from cameraActivity.java and put inside
+ *                                            cropImage.java instead.
+ * Calls:           N/A
  */
 
 public class OcrBox extends View {

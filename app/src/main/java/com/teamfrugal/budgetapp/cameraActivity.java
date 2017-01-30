@@ -1,10 +1,6 @@
 package com.teamfrugal.budgetapp;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.ImageFormat;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,12 +12,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * Class:               cameraActivity
+ * Desc:                This class contains code that creates a new ocr preview which is then drawn
+ *                      to the screen. The OCR preview is created by calling the cameraOCR constructor
+ *                      which is laid out in cameraOCR.java
+ *
+ * Related layout:     activity_camera.xml
+ * Called from:        MainActivity.java
+ * Calls:              cropImage.java, cameraOCR.java
+ */
 
 public class cameraActivity extends AppCompatActivity {
     /** Check if this device has a camera */

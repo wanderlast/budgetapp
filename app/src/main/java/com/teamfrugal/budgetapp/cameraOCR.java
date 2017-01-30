@@ -23,7 +23,13 @@ import java.io.IOException;
 import java.util.Calendar;
 
 /**
- * Created by Matthew on 9/30/2016.
+ * Class:           cameraOCR
+ * Desc:            Sets up all of the required Methods that handle the camera and drawing of the
+ *                  camera on a surface.
+ * Related Layout:  N/A
+ * Called from:     cameraActivity.java
+ * Calls:           OCR.java <---- Used to interface with the OCR Library. Need to refactor because
+ *                                 it will no longer be called within this file.
  */
 
 public class cameraOCR extends SurfaceView implements SurfaceHolder.Callback {
@@ -160,25 +166,6 @@ public class cameraOCR extends SurfaceView implements SurfaceHolder.Callback {
             ocrCamera.release();
             ocrObject.onDestroy();
             previewOpen = false;
-        }
-    }
-
-    public void saveImage(Bitmap b) {
-        File f = new File(Environment.getExternalStorageDirectory() + "/image.jpeg");
-        try {
-            f.createNewFile();
-            FileOutputStream ff = new FileOutputStream(f);
-            b.compress(Bitmap.CompressFormat.JPEG, 100, ff);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void rotate(byte[] input, byte[] output, int height, int width) {
-        for (int i=0; i < height; i++) {
-            for (int j=0; j < width; j++) {
-                output[height-i+j*height] = input[j+i*width];
-            }
         }
     }
 }
