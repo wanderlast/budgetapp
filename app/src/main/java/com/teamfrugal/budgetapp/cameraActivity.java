@@ -1,29 +1,27 @@
 package com.teamfrugal.budgetapp;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.SurfaceTexture;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Surface;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static com.teamfrugal.budgetapp.R.id.camera;
 
 public class cameraActivity extends AppCompatActivity {
     /** Check if this device has a camera */
@@ -31,13 +29,17 @@ public class cameraActivity extends AppCompatActivity {
     private Camera ocrCamera = null;
     private cameraOCR ocrPreview = null;
     private int flashOn = 0;
+    FloatingActionButton snapPhoto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.getBackground().setAlpha(1);
 
+        // Create OCR box
+        OcrBox box = new OcrBox(this);
+        addContentView(box, new Toolbar.LayoutParams(Toolbar.LayoutParams.FILL_PARENT, Toolbar.LayoutParams.FILL_PARENT));
 
         try {
             ocrCamera = Camera.open();
@@ -46,10 +48,6 @@ public class cameraActivity extends AppCompatActivity {
         }
 
         if (ocrCamera != null) {
-            CharSequence success = "Camera initialized";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(this, success, duration);
-            toast.show();
             Camera.Parameters p = ocrCamera.getParameters();
 
             // So no exceptions are thrown
@@ -58,7 +56,7 @@ public class cameraActivity extends AppCompatActivity {
                 p.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             }
             ocrCamera.setParameters(p);
-            ocrPreview = new cameraOCR(this, ocrCamera);
+            ocrPreview = new cameraOCR(this, ocrCamera, getFilesDir(), getAssets(), box);
             preview = (FrameLayout) findViewById(R.id.content_camera);
             preview.addView(ocrPreview);
         }
@@ -69,12 +67,44 @@ public class cameraActivity extends AppCompatActivity {
             toast.show();
         }
         setSupportActionBar(toolbar);
-       // getSupportActionBar().setTitle("New Reciept");
-        //toolbar.getBackground().setAlpha(0);
-
+        getSupportActionBar().setTitle("New Receipt");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        snapPhoto = (FloatingActionButton) findViewById(R.id.snap);
+
+        snapPhoto.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+
+                ocrCamera.takePicture(null, null, savePicture);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Intent intent = new Intent(cameraActivity.this, cropImage.class);
+                startActivity(intent);
+            }
+        });
     }
+
+
+    Camera.PictureCallback savePicture = new Camera.PictureCallback() {
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera) {
+            System.out.println("picture taken");
+            int width = ocrPreview.getWidth();
+            int height = ocrPreview.getHeight();
+            File f = new File(Environment.getExternalStorageDirectory() + "/image.jpeg");
+            try {
+                f.createNewFile();
+                FileOutputStream ff = new FileOutputStream(f);
+                ff.write(data);
+                ff.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,6 +116,7 @@ public class cameraActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         Camera.Parameters p = ocrCamera.getParameters();
+
         if (id == R.id.torch) {
             if (flashOn == 1) {
                 if (p.getSupportedFlashModes().contains(Camera.Parameters.FLASH_MODE_OFF)) {

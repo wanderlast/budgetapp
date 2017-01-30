@@ -23,7 +23,33 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="109dp"
+        android:id="@+id/OCRview"
+        android:layout_gravity="center_horizontal"
+        android:text="test here"
+        android:textColor="@android:color/white"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        tools:ignore="HardcodedText"
+        android:layout_weight="1"
+        android:gravity="bottom" />
+
     <include layout="@layout/content_camera"
-        />
+        android:id="@+id/include"
+        android:layout_height="match_parent"
+        tools:ignore="IncludeLayoutParam"
+        android:layout_width="wrap_content" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="189dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        android:id="@+id/snap"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="bottom|center_horizontal" />
 
 </android.support.design.widget.CoordinatorLayout>

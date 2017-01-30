@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.teamfrugal.budgetapp">
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
@@ -26,6 +27,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.teamfrugal.budgetapp.MainActivity" />
+        </activity>
+        <activity
+            android:name="cropImage"
+            android:label="cropImage"
+            android:parentActivityName=".cameraActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.teamfrugal.budgetapp.cameraActivity" />
         </activity>
     </application>
 

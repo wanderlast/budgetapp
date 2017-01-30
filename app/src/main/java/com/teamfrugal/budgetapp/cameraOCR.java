@@ -1,30 +1,46 @@
 package com.teamfrugal.budgetapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Matrix;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
-import android.view.Display;
+import android.os.Environment;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.regex.Matcher;
-
-import static android.content.Context.WINDOW_SERVICE;
+import java.util.Calendar;
 
 /**
  * Created by Matthew on 9/30/2016.
  */
 
-public class cameraOCR extends SurfaceView implements SurfaceHolder.Callback{
+public class cameraOCR extends SurfaceView implements SurfaceHolder.Callback {
     private Camera ocrCamera;
     private SurfaceHolder ocrHolder;
+    File directory;
+    AssetManager assets;
+    Context context;
+    private int num = 0;
+    private int i = 0;
+    OCR ocrObject;
+    boolean previewOpen;
+    OcrBox box;
 
-    public cameraOCR(Context context, Camera camera) {
+    public cameraOCR(Context context, Camera camera, File dir, AssetManager assets, OcrBox box) {
         super(context);
+        this.context = context;
         ocrCamera = camera;
         ocrCamera.setDisplayOrientation(90);
         // Install a SurfaceHolder.Callback so we get notifed when the
@@ -32,13 +48,30 @@ public class cameraOCR extends SurfaceView implements SurfaceHolder.Callback{
         ocrHolder = getHolder();
         ocrHolder.addCallback(this);
         ocrHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        directory = dir;
+        this.assets = assets;
+        ocrObject = new OCR(directory, assets);
+        this.box = box;
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-         try {
-            ocrCamera.setPreviewDisplay(holder);
+        if (previewOpen) {
+            ocrCamera.stopPreview();
+        }
+
+        try {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(Camera.CameraInfo.CAMERA_FACING_BACK, info);
+            ocrCamera.setPreviewDisplay(ocrHolder);
             ocrCamera.startPreview();
+            Camera.Parameters p = ocrCamera.getParameters();
+            p.setRotation((info.orientation + 360) % 360);
+            p.setJpegQuality(100);
+            p.setPictureSize(1920, 1080);
+            ocrCamera.setParameters(p);
+            previewOpen = true;
         } catch (IOException e) {
             CharSequence error = "Surface unable to be created";
             int duration = Toast.LENGTH_SHORT;
@@ -68,24 +101,84 @@ public class cameraOCR extends SurfaceView implements SurfaceHolder.Callback{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        ocrCamera.setPreviewCallback(new Camera.PreviewCallback() {
-            @Override
-            public void onPreviewFrame(byte[] data, Camera camera) {
-                Camera.Parameters p = camera.getParameters();
-                int height = p.getPreviewSize().height;
-                int width = p.getPreviewSize().width;
-
-                YuvImage y = new YuvImage(data, p.getPictureFormat(), width, height, null);
-
-
-            }
-        });
+//        ocrCamera.setPreviewCallback(new Camera.PreviewCallback() {
+//            @Override
+//            public void onPreviewFrame(byte[] data, Camera camera) {
+//                Camera.Parameters p = camera.getParameters();
+//                int width = p.getPreviewSize().width;
+//                int height = p.getPreviewSize().height;
+//
+//                TextView text = (TextView) ((Activity) context).findViewById(R.id.OCRview);
+//
+//                //if (i++ % 120 == 0) {
+//                //if (i++ != 30) {
+//                int corners[] = new int[4];
+//                box.getCorners(corners);
+//                int leftx = corners[0];
+//                int rightx = corners[1];
+//                int topy = corners[2];
+//                int bottomy = corners[3];
+//
+//             //   System.out.println("left: " + leftx + " -- right: " + rightx);
+//           //     System.out.println("top: " + topy + " -- bottom: " + bottomy);
+//
+//
+//                //byte[] newdata = new byte[data.length];
+//                //rotate(data, newdata, height, width);
+//                //int temp = height;
+//                //height = width;
+//                //width = temp;
+//
+//                //YuvImage yuv = new YuvImage(data, ImageFormat.NV21, width, height, null);
+//                //ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//                //yuv.compressToJpeg(new Rect(bottomy, leftx, topy, rightx), 60, bos);
+//                //yuv.compressToJpeg(new Rect(0, 0, width, height), 100, bos);
+//                //byte[] d = bos.toByteArray();
+//                //Bitmap b = BitmapFactory.decodeByteArray(d, 0, d.length);
+////              Matrix m = new Matrix();
+////              m.postRotate(90);
+//
+////              b = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), m, true);
+////              saveImage(b);
+//
+////              ocrObject.setBitmap(b);
+////              int c = ocrObject.getOCRConfidence();
+////              if (c > 70) {
+////                  String result = ocrObject.getOCRResult() + "";
+////                  text.setText(result);
+////              }
+//            }
+//        });
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        ocrCamera.stopPreview();
-        ocrCamera.release();
+        if (ocrCamera != null) {
+            ocrCamera.stopPreview();
+            ocrCamera.setPreviewCallback(null);
+            ocrHolder = null;
+            ocrCamera.release();
+            ocrObject.onDestroy();
+            previewOpen = false;
+        }
+    }
+
+    public void saveImage(Bitmap b) {
+        File f = new File(Environment.getExternalStorageDirectory() + "/image.jpeg");
+        try {
+            f.createNewFile();
+            FileOutputStream ff = new FileOutputStream(f);
+            b.compress(Bitmap.CompressFormat.JPEG, 100, ff);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void rotate(byte[] input, byte[] output, int height, int width) {
+        for (int i=0; i < height; i++) {
+            for (int j=0; j < width; j++) {
+                output[height-i+j*height] = input[j+i*width];
+            }
+        }
     }
 }
