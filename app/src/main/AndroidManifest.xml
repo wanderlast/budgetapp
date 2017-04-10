@@ -1,0 +1,45 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.teamfrugal.budgetapp">
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Main">
+
+        <activity android:name="com.teamfrugal.budgetapp.ui.quote.ListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.teamfrugal.budgetapp.ui.quote.ArticleDetailActivity"
+            android:label=""
+            android:parentActivityName="com.teamfrugal.budgetapp.ui.quote.ListActivity"/>
+        <activity android:name="com.teamfrugal.budgetapp.ui.ViewSamplesActivity"
+            android:label="Samples"
+            android:parentActivityName="com.teamfrugal.budgetapp.ui.quote.ListActivity"/>
+        <activity android:name="com.teamfrugal.budgetapp.ui.SettingsActivity"
+            android:label="Settings"
+            android:parentActivityName="com.teamfrugal.budgetapp.ui.quote.ListActivity"/>
+        <activity android:name="com.teamfrugal.budgetapp.ui.AboutActivity"
+            android:label="About"
+            android:parentActivityName="com.teamfrugal.budgetapp.ui.quote.ListActivity"/>
+        <activity android:name="com.teamfrugal.budgetapp.ui.CameraActivity"
+            android:label="Camera Activity"
+            android:parentActivityName="com.teamfrugal.budgetapp.ui.quote.ListActivity"/>
+        <activity android:name="com.teamfrugal.budgetapp.ui.CropActivity"
+            android:label="Crop Activity"
+            android:parentActivityName="com.teamfrugal.budgetapp.ui.CameraActivity"/>
+
+    </application>
+
+</manifest>
