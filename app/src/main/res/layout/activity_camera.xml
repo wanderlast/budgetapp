@@ -23,19 +23,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="109dp"
-        android:id="@+id/OCRview"
-        android:layout_gravity="center_horizontal"
-        android:text="test here"
-        android:textColor="@android:color/white"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        tools:ignore="HardcodedText"
-        android:layout_weight="1"
-        android:gravity="bottom" />
-
     <include layout="@layout/content_camera"
         android:id="@+id/include"
         android:layout_height="match_parent"

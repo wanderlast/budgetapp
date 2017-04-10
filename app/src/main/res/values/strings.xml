@@ -1,4 +1,22 @@
 <resources>
     <string name="app_name">Budget App</string>
-    <string name="title_activity_camera">cameraActivity</string>
+    <string name="settings">Settings</string>
+    <string name="created_by">By:</string>
+    <string name="matthew_g">Matthew Gaitan</string>
+    <string name="pedro_g">Pedro Gonzalez</string>
+    <string name="lianne_l">Lianne Louie</string>
+
+
+    <string name="samples_title">Hello title</string>
+    <string name="samples_subhead">Hello Subhead</string>
+    <string name="samples_hint_username">Username</string>
+    <string name="samples_hint_email">E-Mail</string>
+
+
+    <string name="navigation_title">My navigation title</string>
+    <string name="navigation_quotes">Quotes</string>
+    <string name="navigation_samples">Samples</string>
+    <string name="navigation_settings">Settings</string>
+    <string name="navigation_sub_items">Sub items</string>
+
 </resources>
