@@ -4,37 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.teamfrugal.budgetapp.cameraActivity"
+    android:layout_alignParentEnd="false"
+    android:layout_centerInParent="false"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    app:expanded="true">
+    app:expanded="true"
+    tools:context="com.teamfrugal.budgetapp.ui.CameraActivity">
+
+    <ImageView
+        android:contentDescription="image"
+        android:id="@+id/imageview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/store"
-        android:layout_width="268dp"
+        android:layout_width="270dp"
         android:layout_height="42dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="42dp"
-        android:layout_marginLeft="115dp"
+        android:layout_marginStart="117dp"
         android:background="@color/theme_primary_light"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         tools:ignore="HardcodedText" />
 
-    <ImageView
-        android:id="@+id/imageview"
-        android:layout_width="match_parent"
-        android:layout_height="483dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop" />
-
     <TextView
         android:id="@+id/amount"
         android:layout_width="270dp"
         android:layout_height="42dp"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="117dp"
+        android:layout_marginStart="117dp"
         android:background="@android:color/holo_green_light"
         android:textAlignment="center"
         android:textColor="@android:color/white"
@@ -47,15 +51,15 @@
         android:layout_height="42dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="42dp"
-        android:layout_marginRight="270dp"
+        android:layout_marginEnd="270dp"
         android:background="@color/theme_primary_light"
+        android:paddingStart="30dp"
+        android:paddingEnd="0dp"
         android:paddingTop="10dp"
-        android:paddingLeft="30dp"
         android:text="Store:"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        tools:ignore="HardcodedText"
-        tools:paddingLeft="30dp" />
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/amountText"
@@ -63,14 +67,76 @@
         android:layout_height="42dp"
         android:layout_gravity="bottom"
         android:layout_marginEnd="270dp"
-        android:layout_marginRight="270dp"
         android:background="@android:color/holo_green_light"
-        android:elevation="0dp"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="0dp"
         android:paddingTop="10dp"
         android:text="Amount:"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         tools:ignore="HardcodedText" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="42dp">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/storeCheck"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:src="@drawable/ic_done"
+            app:fabSize="mini"
+            tools:srcCompat="@drawable/"
+            app:backgroundTint="@android:color/holo_purple"
+            />
+
+        <ProgressBar
+            android:id="@+id/pbStore"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:max="100"
+            android:progress="0"
+            android:visibility="invisible"
+            android:indeterminateTint="@android:color/white"
+            />
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_gravity="bottom|end">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/amtCheck"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:src="@drawable/ic_done"
+            app:fabSize="mini"
+            tools:srcCompat="@drawable/"
+            app:backgroundTint="@android:color/holo_purple"
+            />
+
+        <ProgressBar
+            android:id="@+id/pbAmt"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:max="100"
+            android:progress="0"
+            android:visibility="invisible"
+            android:indeterminateTint="@android:color/white"
+            />
+    </FrameLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

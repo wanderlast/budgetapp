@@ -1,6 +1,9 @@
 package com.teamfrugal.budgetapp.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
@@ -59,7 +62,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 ocrCamera.takePicture(null, null, savePicture);
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(800);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -77,14 +80,38 @@ public class CameraActivity extends AppCompatActivity {
             System.out.println("picture taken");
             int width = ocrPreview.getWidth();
             int height = ocrPreview.getHeight();
+
+
             File f = new File(Environment.getExternalStorageDirectory() + "/image.jpeg");
-            try {
-                f.createNewFile();
-                FileOutputStream ff = new FileOutputStream(f);
-                ff.write(data);
-                ff.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            BitmapFactory.Options op = new BitmapFactory.Options();
+            Bitmap bm = BitmapFactory.decodeByteArray(data,0, data.length, op);
+
+
+            if (bm.getHeight() == 1080) {
+                try {
+                    System.out.println("rotating");
+
+
+                    Matrix matrix = new Matrix();
+
+                    matrix.setRotate(90, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+
+                    Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, 1920, 1080, matrix, true);
+                    FileOutputStream ff = new FileOutputStream(f);
+
+                    rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, ff);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                try {
+                    FileOutputStream ff = new FileOutputStream(f);
+                    ff.write(data);
+                    ff.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     };

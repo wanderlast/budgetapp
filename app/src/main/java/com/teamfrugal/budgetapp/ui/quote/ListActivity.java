@@ -16,6 +16,8 @@ import com.teamfrugal.budgetapp.ui.CameraActivity;
 import com.teamfrugal.budgetapp.ui.base.BaseActivity;
 import com.teamfrugal.budgetapp.util.LogUtil;
 
+import org.opencv.android.OpenCVLoader;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -29,6 +31,7 @@ public class ListActivity extends BaseActivity implements ArticleListFragment.Ca
      * Whether or not the activity is running on a device with a large screen
      */
     private boolean twoPaneMode;
+    static final String TAG = "mainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,14 @@ public class ListActivity extends BaseActivity implements ArticleListFragment.Ca
         setContentView(R.layout.activity_list);
         ButterKnife.bind(this);
         setupToolbar();
+
+        if(!OpenCVLoader.initDebug()){
+            Log.d(TAG, "OpenCV not loaded");
+            // handle this here
+        } else {
+            Log.d(TAG, "OpenCV loaded");
+        }
+
 
         System.out.println("created ");
 

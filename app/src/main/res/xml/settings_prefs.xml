@@ -7,16 +7,13 @@
         android:summary="@string/pref_settings_1_description"
         android:defaultValue="false" />
 
-    <CheckBoxPreference
-        android:key="@string/pref_settings_2_key"
-        android:title="@string/pref_settings_2_title"
-        android:summary="@string/pref_settings_2_description"
-        android:defaultValue="true" />
-
-    <CheckBoxPreference
-        android:key="@string/pref_settings_3_key"
-        android:title="@string/pref_settings_3_title"
-        android:summary="@string/pref_settings_3_description"
-        android:defaultValue="false" />
+    <ListPreference
+        android:title="OCR Processing"
+        android:summary="Chose where OCR Processing takes place"
+        android:entries="@array/names_array"
+        android:entryValues="@array/names_values_array"
+        android:defaultValue="0"
+        android:key="@string/sp_key_ocr_mode"
+        />
 
 </PreferenceScreen>

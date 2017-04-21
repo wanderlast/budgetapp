@@ -19,4 +19,7 @@
     <string name="navigation_settings">Settings</string>
     <string name="navigation_sub_items">Sub items</string>
 
+    <!-- Shared Preferences keys -->
+    <string name="sp_key_ocr_mode">ocrMode</string>
+
 </resources>
