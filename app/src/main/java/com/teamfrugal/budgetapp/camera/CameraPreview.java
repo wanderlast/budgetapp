@@ -101,7 +101,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 Camera.Parameters p = ocrCamera.getParameters();
                 p.setRotation((info.orientation + 360) % 360);
                 p.setJpegQuality(100);
-                p.setPictureSize(1920, 1088);
+                p.setPictureSize(1920, 1080);
                 //List<Camera.Size> sizes = p.getSupportedPictureSizes();
 
                 //for (int i = 0; i < sizes.size(); i++) {

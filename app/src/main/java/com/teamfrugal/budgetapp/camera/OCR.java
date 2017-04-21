@@ -5,9 +5,9 @@ package com.teamfrugal.budgetapp.camera;
  */
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
+import com.googlecode.leptonica.android.WriteFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,20 +27,35 @@ import java.io.OutputStream;
 
 
 public class OCR  {
-    private TessBaseAPI mTess;
+    private TessBaseAPI mTess = null;
     private String datapath = "";
     private AssetManager assets;
+    private String language;
     public OCR(File location, AssetManager assets) {
         this.assets = assets;
-        mTess = new TessBaseAPI();
+        //mTess = new TessBaseAPI();
         datapath = location + "/tesseract/";
-        String language = "eng";
+        language = "eng";
 
-        //checkFile(new File(datapath + "tessdata/"));
         File tessdata = new File(datapath + "tessdata/");
         checkFile(tessdata);
 
-        mTess.init(datapath, language);
+        init(datapath, language);
+    }
+
+    // once a read type has been called, it is only allowed to use that read type
+    // a reset is needed if you want read in words if tesseract as been set to read numbers
+    public void reset(){
+        init(datapath, language);
+    }
+
+
+
+    // this function initializes the tesseract object
+    // set the path for the trained langage and speciy the language(s)
+    public void init(String langPath, String langs){
+        mTess = new TessBaseAPI();
+        mTess.init(langPath, langs);
     }
 
 

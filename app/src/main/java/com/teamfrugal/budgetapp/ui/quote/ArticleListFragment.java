@@ -99,10 +99,6 @@ public class ArticleListFragment extends ListFragment {
         callback = (Callback) context;
     }
 
-    public void updateAdapter() {
-        adapter.notifyDataSetChanged();
-    }
-
     private class MyListAdapter extends BaseAdapter {
 
         @Override
