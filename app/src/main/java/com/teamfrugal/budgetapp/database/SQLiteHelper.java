@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/* used to open, close, create DB */
+
 public class SQLiteHelper extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "FrugalApp.db";

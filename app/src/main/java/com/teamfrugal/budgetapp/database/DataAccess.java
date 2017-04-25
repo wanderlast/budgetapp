@@ -34,7 +34,7 @@ public class DataAccess {
 
     public Transaction newTransact(String name, String amount, String account, String category,
                                    String type, String date){
-        Transaction t = new Transaction();
+        Transaction t = new Transaction(name, amount, account, category, type, date);
 
         return t;
     }
