@@ -13,6 +13,15 @@ public class Transaction {
     public Transaction(){
         //default constructor
     }
+    
+    public Transaction(String n, double am, String acc, String c, String t, String d){
+        this.name = n;
+        this.amount = am;
+        this.account = acc;
+        this.category = c;
+        this.type = t;
+        this.date = d;
+    }
 
     public int getId(){
         return id;
