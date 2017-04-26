@@ -2,20 +2,28 @@ package com.teamfrugal.budgetapp.ui;
 import java.util.ArrayList;
 import java.util.List;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import com.teamfrugal.budgetapp.R;
+import com.teamfrugal.budgetapp.database.DataAccess;
+import com.teamfrugal.budgetapp.database.ListContent;
+import com.teamfrugal.budgetapp.ui.quote.ListActivity;
+
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Toast;
 
 public class AddTransactionActivity extends Activity implements OnItemSelectedListener {
 
+    private DataAccess mDataAccess;
+    private String mItemSelected;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
 
@@ -51,7 +59,29 @@ public class AddTransactionActivity extends Activity implements OnItemSelectedLi
         spinner.setAdapter(dataAdapter);
 
         EditText accountBox = (EditText) findViewById(R.id.amountText);
-        accountBox.setText("0.00");
+
+
+        accountBox.setText(ListContent.newest.amount+"");
+
+        Button add = (Button) findViewById(R.id.add);
+
+        add.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                mDataAccess = new DataAccess(getApplicationContext());
+                mDataAccess.open();
+                //Transaction newTransaction = mDataAccess.newTransact(ListContent.newest.store, ListContent.newest.amount, "acct", mItemSelected , "type", "date");
+                final String SQL_ADD = "INSERT INTO transactionA Values (" + ListContent.newest.id + ", '" + ListContent.newest.store + "', '" + ListContent.newest.amount
+                        + "', " + "'a', '" + mItemSelected + "', 'c', 'd' );";
+                mDataAccess.getDatabase().execSQL(SQL_ADD);
+                //System.out.println("item added to db");
+                mDataAccess.close();
+                //Context context = getApplicationContext();
+                //finish();
+                getApplicationContext().startActivity(new Intent(getApplicationContext(), ListActivity.class));
+                finish();
+
+            }
+        });
     }
 
     @Override
@@ -61,6 +91,7 @@ public class AddTransactionActivity extends Activity implements OnItemSelectedLi
 
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        mItemSelected = item;
     }
     public void onNothingSelected(AdapterView<?> arg0) {
         //nothing happens???
