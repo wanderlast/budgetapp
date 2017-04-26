@@ -20,6 +20,8 @@ public class DataAccess {
             SQLiteHelper.COLUMN_category, SQLiteHelper.COLUMN_type, SQLiteHelper.COLUMN_datetime
     };
 
+    private String[] usefulColumns = { SQLiteHelper.COLUMN_name, SQLiteHelper.COLUMN_amount };
+
     public DataAccess (Context context){
         helper = new SQLiteHelper(context);
     }
@@ -32,10 +34,14 @@ public class DataAccess {
         helper.close();
     }
 
-    public Transaction newTransact(String name, String amount, String account, String category,
+    public Transaction newTransact(String name, double amount, String account, String category,
                                    String type, String date){
         Transaction t = new Transaction(name, amount, account, category, type, date);
 
         return t;
+    }
+
+    public Cursor testTransact(){
+        return database.rawQuery("SELECT * FROM transactions", null);
     }
 }
