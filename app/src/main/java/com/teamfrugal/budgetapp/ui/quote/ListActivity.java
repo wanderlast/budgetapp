@@ -1,6 +1,7 @@
 package com.teamfrugal.budgetapp.ui.quote;
 
 import android.content.Intent;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.teamfrugal.budgetapp.R;
+import com.teamfrugal.budgetapp.database.DataAccess;
 import com.teamfrugal.budgetapp.dummy.DummyContent;
 import com.teamfrugal.budgetapp.ui.CameraActivity;
 import com.teamfrugal.budgetapp.ui.base.BaseActivity;
@@ -32,6 +34,7 @@ public class ListActivity extends BaseActivity implements ArticleListFragment.Ca
      */
     private boolean twoPaneMode;
     static final String TAG = "mainActivity";
+    private DataAccess dataAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,12 @@ public class ListActivity extends BaseActivity implements ArticleListFragment.Ca
 
 
         System.out.println("created ");
+
+        dataAccess = new DataAccess(this);
+        dataAccess.open();
+
+        System.out.println(DatabaseUtils.dumpCursorToString(dataAccess.testTransact()));
+
 
         if (isTwoPaneLayoutUsed()) {
             twoPaneMode = true;

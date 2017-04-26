@@ -12,7 +12,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
     private static final String DATABASE_NAME = "FrugalApp.db";
     private static int DATABASE_VERSION = 1;
 
-    public static final String TABLE_TRANSACTION = "transaction";
+    public static final String TABLE_TRANSACTION = "transactions";
     public static final String COLUMN_transID = "transID";
     public static final String COLUMN_name = "name";
     public static final String COLUMN_amount = "amount";
@@ -27,14 +27,14 @@ public class SQLiteHelper extends SQLiteOpenHelper{
     }
 
     private static final String CREATE_DB =
-            "create table if not exists" + TABLE_TRANSACTION
+            "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTION
                     + "( " + COLUMN_transID + " integer primary key autoincrement, "
-                    + COLUMN_name + "text not null, "
+                    + COLUMN_name + " text not null, "
                     + COLUMN_amount + " real not null, "
                     + COLUMN_account + " text, "
                     + COLUMN_category + " text, "
-                    + COLUMN_type + "text, "
-                    + COLUMN_datetime + "text "
+                    + COLUMN_type + " text, "
+                    + COLUMN_datetime + " text "
                     + ");";
 
     @Override
