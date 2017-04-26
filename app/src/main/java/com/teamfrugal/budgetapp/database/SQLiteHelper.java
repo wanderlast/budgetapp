@@ -5,14 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-/* used to open, close, create DB */
-
 public class SQLiteHelper extends SQLiteOpenHelper{
 
-    private static final String DATABASE_NAME = "FrugalApp.db";
+    private static final String DATABASE_NAME = "FrugalApp1.db";
     private static int DATABASE_VERSION = 1;
 
-    public static final String TABLE_TRANSACTION = "transactions";
+    public static final String TABLE_TRANSACTION = "transactionA";
     public static final String COLUMN_transID = "transID";
     public static final String COLUMN_name = "name";
     public static final String COLUMN_amount = "amount";
@@ -21,14 +19,16 @@ public class SQLiteHelper extends SQLiteOpenHelper{
     public static final String COLUMN_type = "type";
     public static final String COLUMN_datetime = "date";
 
+    public static int currentID = 0;
+
     public SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         System.out.println("Database created.");
     }
 
-    private static final String CREATE_DB =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTION
-                    + "( " + COLUMN_transID + " integer primary key autoincrement, "
+    public static final String CREATE_DB =
+            "CREATE TABLE IF NOT EXISTS" + TABLE_TRANSACTION
+                    + " (" + COLUMN_transID + " integer primary key autoincrement, "
                     + COLUMN_name + " text not null, "
                     + COLUMN_amount + " real not null, "
                     + COLUMN_account + " text, "
@@ -37,8 +37,12 @@ public class SQLiteHelper extends SQLiteOpenHelper{
                     + COLUMN_datetime + " text "
                     + ");";
 
+    public static final String LAST_ID =
+            "SELECT * FROM " + TABLE_TRANSACTION + " ORDER BY " + COLUMN_transID + " DESC LIMIT 1";
+
     @Override
     public void onCreate(SQLiteDatabase database) {
+        System.out.println("am i creating?");
         database.execSQL(CREATE_DB);
     }
 
