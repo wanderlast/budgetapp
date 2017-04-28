@@ -97,17 +97,9 @@ public class ListActivity extends BaseActivity implements ArticleListFragment.Ca
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
 
         if (permissionCheck != PackageManager.PERMISSION_GRANTED){
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.CAMERA)){
-
-                // Gives rationale for needing a permission.
-
-            } else {
-
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                         PERMISSION_FOR_CAMERA);
-            }
         } else {
             Intent intent = new Intent(ListActivity.this,
                     CameraActivity.class);
