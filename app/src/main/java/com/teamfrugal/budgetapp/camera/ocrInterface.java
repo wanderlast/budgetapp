@@ -52,10 +52,10 @@ public class ocrInterface extends AsyncTask<Void, Integer, String> {
     // MODE == 1 for Server Processing
     //private int MODE = 0;
     private int mode;
-    ProgressBar mp;
+    ProgressBar mp[] = new ProgressBar[2];
     int sPressed, aPressed;
     ocrInterface(Context cc, TessBaseAPI mTess, Bitmap bitmap, TextView text, TextView sText,
-                 TextView aText, int reading, ProgressBar mp) {
+                 TextView aText, int reading, ProgressBar mp[]) {
         this.c = cc;
         this.mTess = mTess;
         this.inBitmap = bitmap;
@@ -71,7 +71,8 @@ public class ocrInterface extends AsyncTask<Void, Integer, String> {
         System.out.println("Mode <----> " + mode);
 
         if (reading == 0) readWord(); else readNum();
-        this.mp = mp;
+        this.mp[0] = mp[0];
+        this.mp[1] = mp[1];
     }
 
     @Override
@@ -119,15 +120,27 @@ public class ocrInterface extends AsyncTask<Void, Integer, String> {
 
     @Override
     protected void onProgressUpdate(Integer ... x) {
-        if (x[0] == 0)
-            mp.setVisibility(View.VISIBLE);
+        if (x[0] == 0 && text == sText)
+            mp[0].setVisibility(View.VISIBLE);
         else
-            mp.setVisibility(View.INVISIBLE);
+            mp[0].setVisibility(View.INVISIBLE);
+
+        if (x[0] == 0 &&  text == aText)
+            mp[1].setVisibility(View.VISIBLE);
+        else
+            mp[1].setVisibility(View.INVISIBLE);
     }
 
 
     @Override
     protected void onPostExecute(String result) {
+
+        if (text == aText) {
+            if (result.contains(" ")) {
+                System.out.println("removing spaces");
+                result = result.replaceAll(" ", "");
+            }
+        }
         text.setText(result);
     }
 
@@ -155,7 +168,7 @@ public class ocrInterface extends AsyncTask<Void, Integer, String> {
         System.out.println("readword");
         if(mTess == null)
             return null;
-        return mTess.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "1234567890") ? this : null;
+        return mTess.setVariable(TessBaseAPI.VAR_CHAR_BLACKLIST, "1234567890'$") ? this : null;
     }
 
     // sets tesseract to read in numbers only
@@ -163,7 +176,7 @@ public class ocrInterface extends AsyncTask<Void, Integer, String> {
         System.out.println("readnum");
         if(mTess == null)
             return null;
-        return mTess.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, "1234567890.$") ? this : null;
+        return mTess.setVariable(TessBaseAPI.VAR_CHAR_WHITELIST, "1234567890.") ? this : null;
     }
 
 

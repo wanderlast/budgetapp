@@ -12,7 +12,9 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -44,6 +46,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     File directory;
     AssetManager assets;
     Context context;
+    DisplayMetrics metrics;
     private int num = 0;
     private int i = 0;
     OCR ocrObject;
@@ -52,7 +55,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     int rotation;
 
 
-    public CameraPreview(Context context, Camera camera, File dir, AssetManager assets) {
+    public CameraPreview(Context context, Camera camera, File dir, AssetManager assets, DisplayMetrics metrics) {
         super(context);
         this.ocrCamera = camera;
         // Install a SurfaceHolder.Callback so we get notified when the
@@ -64,6 +67,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         directory = dir;
         this.assets = assets;
         this.context = context;
+        this.metrics = metrics;
     }
 
     @Override
@@ -101,8 +105,19 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 Camera.Parameters p = ocrCamera.getParameters();
                 p.setRotation((info.orientation + 360) % 360);
                 p.setJpegQuality(100);
-                p.setPictureSize(1920, 1080);
-                //List<Camera.Size> sizes = p.getSupportedPictureSizes();
+
+                System.out.println("Metrics height: " + metrics.heightPixels);
+                System.out.println("Metrics width: " + metrics.widthPixels);
+
+                if ( metrics.heightPixels == 2768) {
+                    p.setPictureSize(2560, 1440);
+                    System.out.println("picture size 2560 x 1440");
+                } else {
+                    p.setPictureSize(1920, 1080);
+                    System.out.println("picture size 1920 x 1080");
+                }
+
+               // List<Camera.Size> sizes = p.getSupportedPictureSizes();
 
                 //for (int i = 0; i < sizes.size(); i++) {
                 //    System.out.println("" + i + " "+sizes.get(i).width + " x " + sizes.get(i).height);

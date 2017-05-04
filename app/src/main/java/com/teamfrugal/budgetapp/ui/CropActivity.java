@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -69,10 +70,14 @@ public class CropActivity extends AppCompatActivity {
         System.out.println("h: " + ht);
 
         ProgressBar mProgress = (ProgressBar) findViewById(R.id.pbStore);
+        ProgressBar mProgress2 = (ProgressBar) findViewById(R.id.pbAmt);
         FloatingActionButton sButton = (FloatingActionButton) findViewById(R.id.storeCheck);
         FloatingActionButton aButton = (FloatingActionButton) findViewById(R.id.amtCheck);
 
-        boxes = new OcrBox(this, b, image, myOCR , sText, aText, mProgress, sButton, aButton);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        boxes = new OcrBox(this, b, image, myOCR , sText, aText, mProgress, mProgress2, sButton, aButton, metrics);
 
 
         addContentView(boxes, new Toolbar.LayoutParams(Toolbar.LayoutParams.FILL_PARENT, Toolbar.LayoutParams.FILL_PARENT));

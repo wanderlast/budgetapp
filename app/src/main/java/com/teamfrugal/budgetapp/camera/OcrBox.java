@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MotionEventCompat;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -46,14 +47,15 @@ import static java.lang.Math.pow;
 
 public class OcrBox extends View {
     private Paint b[][] = new Paint[2][4];
-    private static int offsetX[]=new int[2];
-    private static int offsetY[]=new int[2];
+    private int offsetX[]=new int[2];
+    private int offsetY[]=new int[2];
     private float mLastTouchX=0;
     private float mLastTouchY=0;
     private int mActivePointerId=INVALID_POINTER_ID;
     private int centerX[][] = new int[2][4], centerY[][]=new int[2][4];
     private Bitmap image;
     private int active=-1;
+    private DisplayMetrics metrics;
     TextView sText, aText;
     OCR myOCR;
     int pos[][]=new int[2][2];
@@ -74,12 +76,15 @@ public class OcrBox extends View {
 
     int colorChange = -1;
 
-    ProgressBar mp;
+    ProgressBar mp[] = new ProgressBar[2];
     int sPressed, aPressed;
 
+    int lt=0, rt=0, top=0, bottom=0;
+
+
     public OcrBox(final CropActivity context, box[] box, Bitmap image, OCR myOCR, final TextView sText,
-                  final TextView aText, ProgressBar mProgressBar, FloatingActionButton sButton,
-                  FloatingActionButton aButton) {
+                  final TextView aText, ProgressBar mProgressBar, ProgressBar mProgressBar2,
+                  FloatingActionButton sButton, FloatingActionButton aButton, DisplayMetrics metrics) {
         super(context);
 
         mLastTouchX=0;
@@ -94,17 +99,19 @@ public class OcrBox extends View {
         this.boxes = box;
 
         for (int i = 0; i < 2; i++) {
-            corners[i][0] = new Point(box[i].origin[0] - 50, box[i].origin[1] - 50);
-            corners[i][1] = new Point(box[i].origin[0] + 50, box[i].origin[1] - 50);
-            corners[i][2] = new Point(box[i].origin[0] - 50, box[i].origin[1] + 50);
-            corners[i][3] = new Point(box[i].origin[0] + 50, box[i].origin[1] + 50);
+            corners[i][0] = new Point(box[i].origin[0] - 150, box[i].origin[1] - 50);
+            corners[i][1] = new Point(box[i].origin[0] + 150, box[i].origin[1] - 50);
+            corners[i][2] = new Point(box[i].origin[0] - 150, box[i].origin[1] + 50);
+            corners[i][3] = new Point(box[i].origin[0] + 150, box[i].origin[1] + 50);
         }
         this.image = image;
         this.myOCR = myOCR;
         this.sText = sText;
         this.aText = aText;
 
-        this.mp = mProgressBar;
+        this.mp[0] = mProgressBar;
+        this.mp[1] = mProgressBar2;
+        this.metrics = metrics;
 
         sButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
@@ -120,6 +127,20 @@ public class OcrBox extends View {
                     finish(context);
             }
         });
+
+
+        if (metrics.widthPixels == 1080) {
+            lt = 25;
+            rt = 1055;
+            top = 100;
+            bottom = 1500;
+        } else {
+            lt = 25;
+            rt = 1415;
+            top = 125;
+            bottom = 2400;
+        }
+
     }
 
     void finish(final CropActivity context) {
@@ -289,9 +310,11 @@ public class OcrBox extends View {
             centerYScaled[i][2] = centerY[i][2] + scaleYdir[i][2];
             centerYScaled[i][3] = centerY[i][3] + scaleYdir[i][3];
 
+
             // only works for 1080p screen currently. Not exactly sure how to go about supporting
             // different resolutions just yet.
-            if (centerX[i][0] > 25 && centerX[i][1] < 1055) {
+
+            if (centerX[i][0] > lt && centerX[i][1] < rt) {
                 if (colorChange == 1) {
                     corners[i][3].x = centerXScaled[i][3];
                     corners[i][right].x = centerXScaled[i][1];
@@ -303,7 +326,7 @@ public class OcrBox extends View {
                 }
             }
 
-            if (centerY[i][0] > 100 && centerY[i][2] < 1500) {
+            if (centerY[i][0] > top && centerY[i][2] < bottom) {
                 if (colorChange == 1) {
                     corners[i][3].y = centerYScaled[i][3];
                     corners[i][left].y = centerYScaled[i][2];
@@ -332,8 +355,11 @@ public class OcrBox extends View {
         Point s = corners[active][0];
         Point e = corners[active][3];
 
-        storeClip = Bitmap.createBitmap(image, s.x - 15, s.y + 25, e.x - s.x + 27, e.y - s.y + 23);
-
+        if (metrics.widthPixels == 1080) {
+            storeClip = Bitmap.createBitmap(image, s.x - 15, s.y + 25, e.x - s.x + 27, e.y - s.y + 23);
+        } else {
+            storeClip = Bitmap.createBitmap(image, s.x - 15, s.y-110 , e.x - s.x + 27, e.y - s.y +30);
+        }
         File f = new File(Environment.getExternalStorageDirectory() + "/sub" + active + ".jpeg");
         try {
             ByteArrayOutputStream b = new ByteArrayOutputStream();
