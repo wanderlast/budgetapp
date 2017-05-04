@@ -14,6 +14,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -93,14 +95,26 @@ public class CameraActivity extends AppCompatActivity {
 
             if (bm.getHeight() == 1080) {
                 try {
-                    System.out.println("rotating");
-
+                    System.out.println("rotating 1080");
 
                     Matrix matrix = new Matrix();
-
-                    matrix.setRotate(90, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+                    matrix.setRotate(90, 1080, 1920);
 
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, 1920, 1080, matrix, true);
+                    FileOutputStream ff = new FileOutputStream(f);
+
+                    rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, ff);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (bm.getHeight() == 1440) {
+                try {
+                    System.out.println("rotating 1440");
+
+                    Matrix matrix = new Matrix();
+                    matrix.setRotate(90, 1440, 2560);
+
+                    Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, 2560, 1440, matrix, true);
                     FileOutputStream ff = new FileOutputStream(f);
 
                     rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, ff);
@@ -153,7 +167,10 @@ public class CameraActivity extends AppCompatActivity {
     protected void onResume() {
         ocrCamera = getCamera();
 
-        ocrPreview = new CameraPreview(this, ocrCamera, getFilesDir(), getAssets());
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        ocrPreview = new CameraPreview(this, ocrCamera, getFilesDir(), getAssets(), metrics);
         preview = (FrameLayout) findViewById(R.id.content_camera);
         preview.addView(ocrPreview);
 
