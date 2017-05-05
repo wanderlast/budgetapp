@@ -125,7 +125,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.nav_shoppingList:
-                startActivity(new Intent(this, AddItemActivity.class));
+                startActivity(new Intent(this, ShowShoppingListActivity.class));
+                break;
+            case R.id.nav_samples:
+                startActivity(new Intent(this, ViewSamplesActivity.class));
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

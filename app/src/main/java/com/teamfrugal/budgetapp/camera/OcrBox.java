@@ -148,7 +148,7 @@ public class OcrBox extends View {
         double price = Double.parseDouble(aText.getText().toString().replace("$","").replace(" ",""));
         //addItem(new ListContent.Item(0, ListContent.randPhotoId(), sText.getText().toString(), price));
         addItem(new ListContent.Item(0, R.drawable.ic_remove_circle_black_24dp,
-                sText.getText().toString(), price);
+                sText.getText().toString(), price, ""));
         //context.startActivity(new Intent(context, ListActivity.class));
         context.startActivity(new Intent(context, AddTransactionActivity.class));
         context.finish();
