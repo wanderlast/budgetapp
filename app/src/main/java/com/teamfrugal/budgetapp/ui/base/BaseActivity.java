@@ -19,6 +19,8 @@ import com.teamfrugal.budgetapp.ui.SettingsActivity;
 import com.teamfrugal.budgetapp.ui.ViewSamplesActivity;
 import com.teamfrugal.budgetapp.ui.quote.ListActivity;
 
+import java.text.NumberFormat;
+
 import static com.teamfrugal.budgetapp.R.id.textView;
 import static com.teamfrugal.budgetapp.util.LogUtil.logD;
 import static com.teamfrugal.budgetapp.util.LogUtil.makeLogTag;
@@ -38,6 +40,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Toolbar actionBarToolbar;
 
+    NumberFormat nf = NumberFormat.getCurrencyInstance();
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -58,7 +61,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         View header = navigationView.getHeaderView(0);
         TextView total = (TextView)header.findViewById(R.id.textView);
-        total.setText("-$" + ListContent.total);
+        total.setText(nf.format(ListContent.total));
 
         if (navigationView != null) {
             setupDrawerSelectListener(navigationView);

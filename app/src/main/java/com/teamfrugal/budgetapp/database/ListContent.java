@@ -12,6 +12,9 @@ import com.teamfrugal.budgetapp.R;
 import com.teamfrugal.budgetapp.dummy.DummyContent;
 import com.teamfrugal.budgetapp.ui.base.BaseActivity;
 
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +33,8 @@ public class ListContent extends BaseActivity {
     static DataAccess da = null;
     private Cursor cursor;
     public static Item newest;
+
+    NumberFormat nf = NumberFormat.getCurrencyInstance();
 static Context con;
     TextView tTextView;
     public static double total;
@@ -42,7 +47,7 @@ static Context con;
        //e this.tTextView = tTextView;
         System.out.println("outsideeeeeeeeeeeeeeee");
         this.con = con;
-        total = 0.0;
+        total = 0.00;
         int i = 1;
         try {
             System.out.println("onCreate ListContent");
@@ -60,13 +65,23 @@ static Context con;
                 if  (cursor.moveToFirst()) {
                     do {
                         System.out.println("item");
+                        String isExpense = "";
                         int id = cursor.getInt(0);
                         String store = cursor.getString(1);
                         Double amount = cursor.getDouble(2);
 
                         System.out.println("ST-----> " +store + " ::::: " + amount);
-                        total += amount;
-                        Item item = new Item(id, randPhotoId(), store, amount);
+                        System.out.println(cursor.getString(5));
+                        if(cursor.getString(5).compareTo("expense") == 0) {
+                            total -= amount;
+                            isExpense = "Expense";
+                            System.out.println("TOTAL IS (after income): " + total);
+                        } else {
+                            total += amount;
+                            isExpense = "Income";
+                            System.out.println("TOTAL IS: " + total);
+                        }
+                        Item item = new Item(id, randPhotoId(), store, amount, isExpense);
                         results.add(item);
                         ITEM_MAP.put(""+id, item);
 
@@ -127,12 +142,22 @@ static Context con;
         public final int photoId;
         public final String store;
         public final double amount;
+        public final String isExpense;
 
         public Item(int id, int photoId, String store, double amount) {
             this.id = id;
             this.photoId = photoId;
             this.store = store;
             this.amount = amount;
+            this.isExpense = "Expense";
+        }
+
+        public Item(int id, int photoId, String store, double amount, String isExpense) {
+            this.id = id;
+            this.photoId = photoId;
+            this.store = store;
+            this.amount = amount;
+            this.isExpense = isExpense;
         }
     }
 }

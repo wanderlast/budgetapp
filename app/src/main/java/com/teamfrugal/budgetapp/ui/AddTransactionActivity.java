@@ -16,19 +16,30 @@ import com.teamfrugal.budgetapp.database.ListContent;
 import com.teamfrugal.budgetapp.ui.quote.ListActivity;
 
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Switch;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 
 public class AddTransactionActivity extends Activity implements OnItemSelectedListener {
 
     private DataAccess mDataAccess;
     private String mItemSelected;
+    private boolean isExpense;
+    private Switch mySwitch;
+    String expenseName = "expense";
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
 
+        //Switch element
+        mySwitch = (Switch) findViewById(R.id.switch1);
+        mySwitch.setChecked(true);
+
         // Spinner element
-        Spinner spinner = (Spinner) findViewById(R.id.type_spinner);
+        final Spinner spinner = (Spinner) findViewById(R.id.type_spinner);
 
         // Spinner click listener
         spinner.setOnItemSelectedListener(this);
@@ -48,9 +59,9 @@ public class AddTransactionActivity extends Activity implements OnItemSelectedLi
         List<String> incomeCategories = new ArrayList<String>();
         incomeCategories.add("Income");
 
-
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, expenseCategories);
+        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, expenseCategories);
+        final ArrayAdapter<String> dataAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, incomeCategories);
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -58,8 +69,26 @@ public class AddTransactionActivity extends Activity implements OnItemSelectedLi
         // attaching data adapter to spinner
         spinner.setAdapter(dataAdapter);
 
-        EditText accountBox = (EditText) findViewById(R.id.amountText);
+        mySwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                if(isChecked){
+                    isExpense = true;
+                    expenseName = "expense";
+                    spinner.setAdapter(dataAdapter);
+                }else{
+                    isExpense = false;
+                    expenseName = "income";
+                    spinner.setAdapter(dataAdapter2);
+
+                }
+
+            }
+        });
+
+        EditText accountBox = (EditText) findViewById(R.id.amountText);
 
         accountBox.setText(ListContent.newest.amount+"");
 
@@ -70,8 +99,10 @@ public class AddTransactionActivity extends Activity implements OnItemSelectedLi
                 mDataAccess = new DataAccess(getApplicationContext());
                 mDataAccess.open();
                 //Transaction newTransaction = mDataAccess.newTransact(ListContent.newest.store, ListContent.newest.amount, "acct", mItemSelected , "type", "date");
+
                 final String SQL_ADD = "INSERT INTO transactionA Values (" + ListContent.newest.id + ", '" + ListContent.newest.store + "', '" + ListContent.newest.amount
-                        + "', " + "'a', '" + mItemSelected + "', 'c', 'd' );";
+                        + "', " + "'a', '" + mItemSelected + "', '" + expenseName + "', 'd' );";
+
                 mDataAccess.getDatabase().execSQL(SQL_ADD);
                 //System.out.println("item added to db");
                 mDataAccess.close();

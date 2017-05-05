@@ -25,12 +25,16 @@ import com.teamfrugal.budgetapp.R;
 import com.teamfrugal.budgetapp.database.ListContent;
 import com.teamfrugal.budgetapp.dummy.DummyContent;
 
+import java.text.NumberFormat;
+
 /**
  * Shows a list of all available quotes.
  * <p/>
  * Created by Andreas Schrade on 14.12.2015.
  */
 public class ArticleListFragment extends ListFragment {
+
+    NumberFormat nf = NumberFormat.getCurrencyInstance();
 
     private Callback callback = dummyCallback;
     private MyListAdapter adapter;
@@ -132,7 +136,7 @@ public class ArticleListFragment extends ListFragment {
             //final DummyContent.DummyItem item = (DummyContent.DummyItem) getItem(position);
             final ListContent.Item item = (ListContent.Item) getItem(position);
             ((TextView) convertView.findViewById(R.id.article_title)).setText(item.store);
-            ((TextView) convertView.findViewById(R.id.article_subtitle)).setText(""+item.amount);
+            ((TextView) convertView.findViewById(R.id.article_subtitle)).setText(""+nf.format(item.amount));
             final ImageView img = (ImageView) convertView.findViewById(R.id.thumbnail);
             Glide.with(getActivity()).load(item.photoId).asBitmap().fitCenter().into(new BitmapImageViewTarget(img) {
                 @Override

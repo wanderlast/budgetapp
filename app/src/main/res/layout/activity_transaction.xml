@@ -25,8 +25,8 @@
         android:showText="true"
         android:text="Expense or Income?"
         android:textAppearance="@style/TextAppearance.Medium"
-        android:textOff="Expense"
-        android:textOn="Income" />
+        android:textOff="Income"
+        android:textOn="Expense" />
 
     <LinearLayout
         android:layout_width="fill_parent"
