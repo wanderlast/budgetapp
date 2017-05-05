@@ -18,6 +18,8 @@ import com.teamfrugal.budgetapp.ui.AboutActivity;
 import com.teamfrugal.budgetapp.ui.SettingsActivity;
 import com.teamfrugal.budgetapp.ui.ViewSamplesActivity;
 import com.teamfrugal.budgetapp.ui.quote.ListActivity;
+import com.teamfrugal.budgetapp.ui.shoppinglist.AddItemActivity;
+import com.teamfrugal.budgetapp.ui.shoppinglist.ShowShoppingListActivity;
 
 import java.text.NumberFormat;
 
@@ -122,8 +124,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 startActivity(new Intent(this, ListActivity.class));
                 finish();
                 break;
-            case R.id.nav_samples:
-                startActivity(new Intent(this, ViewSamplesActivity.class));
+            case R.id.nav_shoppingList:
+                startActivity(new Intent(this, AddItemActivity.class));
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
