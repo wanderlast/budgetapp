@@ -26,8 +26,9 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.teamfrugal.budgetapp.R;
 import com.teamfrugal.budgetapp.database.ListContent;
 import com.teamfrugal.budgetapp.dummy.DummyContent;
-
+import java.text.NumberFormat;
 import java.io.File;
+
 
 /**
  * Shows a list of all available quotes.
@@ -35,6 +36,8 @@ import java.io.File;
  * Created by Andreas Schrade on 14.12.2015.
  */
 public class ArticleListFragment extends ListFragment {
+
+    NumberFormat nf = NumberFormat.getCurrencyInstance();
 
     private Callback callback = dummyCallback;
     private MyListAdapter adapter;
@@ -172,7 +175,7 @@ public class ArticleListFragment extends ListFragment {
 
             //final DummyContent.DummyItem item = (DummyContent.DummyItem) getItem(position);
             ((TextView) convertView.findViewById(R.id.article_title)).setText(item.store);
-            ((TextView) convertView.findViewById(R.id.article_subtitle)).setText(""+item.amount);
+            ((TextView) convertView.findViewById(R.id.article_subtitle)).setText(""+nf.format(item.amount));
             if (dt == 1) {
                 ((TextView) convertView.findViewById(R.id.date)).setText(item.date);
                 //dt++;
