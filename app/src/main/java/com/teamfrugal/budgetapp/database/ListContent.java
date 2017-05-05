@@ -30,7 +30,7 @@ public class ListContent extends BaseActivity {
     static DataAccess da = null;
     private Cursor cursor;
     public static Item newest;
-static Context con;
+    static Context con;
     TextView tTextView;
     public static double total;
 
@@ -50,6 +50,7 @@ static Context con;
             da = new DataAccess(con);
             da.open();
             //da.drop();
+            //da.insertTest();
             System.out.println("opening");
             cursor = da.query();
             System.out.println("querying");
@@ -59,19 +60,31 @@ static Context con;
                 System.out.println("CURSOR NOT NULL"    );
                 if  (cursor.moveToFirst()) {
                     do {
+                        Item item;
                         System.out.println("item");
                         int id = cursor.getInt(0);
                         String store = cursor.getString(1);
                         Double amount = cursor.getDouble(2);
+                        int type = cursor.getInt(5);
+                        String date = cursor.getString(6);
 
                         System.out.println("ST-----> " +store + " ::::: " + amount);
-                        total += amount;
-                        Item item = new Item(id, randPhotoId(), store, amount);
+                        System.out.println("dt: " + date.substring(0, 10));
+                        date = date.substring(0,10).replace("-", "/");
+                        if (type == 1) {
+                            item = new Item(id, R.drawable.ic_remove, store, amount, date);
+                            //System.out.println("total -= amount: " + total + " - " + amount + " = " + (total-=amount));
+                            total -= amount;
+                        } else {
+                            item = new Item(id, R.drawable.ic_add, store, amount, date);
+                            total += amount;
+                            //System.out.println("total += amount: " + total + " + " + amount + " = " + (total+=amount));
+                        }
                         results.add(item);
                         ITEM_MAP.put(""+id, item);
 
 
-                    }while (cursor.moveToNext());
+                    } while (cursor.moveToNext());
                 }
             }
 
@@ -127,12 +140,14 @@ static Context con;
         public final int photoId;
         public final String store;
         public final double amount;
+        public final String date;
 
-        public Item(int id, int photoId, String store, double amount) {
+        public Item(int id, int photoId, String store, double amount, String date) {
             this.id = id;
             this.photoId = photoId;
             this.store = store;
             this.amount = amount;
+            this.date = date;
         }
     }
 }

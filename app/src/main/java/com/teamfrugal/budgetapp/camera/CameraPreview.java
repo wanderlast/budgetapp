@@ -93,12 +93,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 }
 
                 int result;
-                if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                    result = (info.orientation + degrees) % 360;
-                    result = (360 - result) % 360;  // compensate the mirror
-                } else {  // back-facing
+               // if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+               //     result = (info.orientation + degrees) % 360;
+                //    result = (360 - result) % 360;  // compensate the mirror
+                //} else {  // back-facing
                     result = (info.orientation - degrees + 360) % 360;
-                }
+                //}
                 ocrCamera.setDisplayOrientation(result);
 
 

@@ -1,9 +1,22 @@
 package com.teamfrugal.budgetapp.ui;
+import java.io.File;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +30,8 @@ import com.teamfrugal.budgetapp.ui.quote.ListActivity;
 
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Toast;
+
+import static com.teamfrugal.budgetapp.ui.SettingsActivity.KEY_IMG_MODE;
 
 public class AddTransactionActivity extends Activity implements OnItemSelectedListener {
 
@@ -58,7 +73,7 @@ public class AddTransactionActivity extends Activity implements OnItemSelectedLi
         // attaching data adapter to spinner
         spinner.setAdapter(dataAdapter);
 
-        EditText accountBox = (EditText) findViewById(R.id.amountText);
+        final EditText accountBox = (EditText) findViewById(R.id.amountText);
 
 
         accountBox.setText(ListContent.newest.amount+"");
@@ -70,11 +85,42 @@ public class AddTransactionActivity extends Activity implements OnItemSelectedLi
                 mDataAccess = new DataAccess(getApplicationContext());
                 mDataAccess.open();
                 //Transaction newTransaction = mDataAccess.newTransact(ListContent.newest.store, ListContent.newest.amount, "acct", mItemSelected , "type", "date");
-                final String SQL_ADD = "INSERT INTO transactionA Values (" + ListContent.newest.id + ", '" + ListContent.newest.store + "', '" + ListContent.newest.amount
-                        + "', " + "'a', '" + mItemSelected + "', 'c', 'd' );";
+                // using a value of 1 on type to represent a purchase.
+                final String SQL_ADD = "INSERT INTO transactionA Values (" + ListContent.newest.id + ", '" + ListContent.newest.store + "', '" + accountBox.getText()
+                        + "', " + "'a', '" + mItemSelected + "', '1', DATETIME('now', 'localtime') );";
                 mDataAccess.getDatabase().execSQL(SQL_ADD);
                 //System.out.println("item added to db");
                 mDataAccess.close();
+
+
+                // store image if image saving setting is selected
+                SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                int mode2 = Integer.parseInt(mSharedPreferences.getString(KEY_IMG_MODE, "0"));
+
+                System.out.println("MODE22222222 ------- " + mode2);
+
+                if (mode2 == 1) {
+                    try {
+                        InputStream file = new FileInputStream(Environment.getExternalStorageDirectory() + "/image.jpeg");
+                        File dir = new File(Environment.getExternalStorageDirectory() + "/Receipts/");
+                        File out = new File(Environment.getExternalStorageDirectory() + "/Receipts/"+ ListContent.newest.id + ".jpeg");
+                        dir.mkdirs();
+                        out.createNewFile();
+                        OutputStream output = new FileOutputStream(out, false);
+
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = file.read(buffer)) > 0) {
+                            output.write(buffer, 0, length);
+                        }
+                        file.close();
+                        output.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
                 //Context context = getApplicationContext();
                 //finish();
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), ListActivity.class));

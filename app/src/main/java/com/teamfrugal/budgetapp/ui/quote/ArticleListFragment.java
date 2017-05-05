@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
@@ -25,6 +27,8 @@ import com.teamfrugal.budgetapp.R;
 import com.teamfrugal.budgetapp.database.ListContent;
 import com.teamfrugal.budgetapp.dummy.DummyContent;
 
+import java.io.File;
+
 /**
  * Shows a list of all available quotes.
  * <p/>
@@ -34,6 +38,8 @@ public class ArticleListFragment extends ListFragment {
 
     private Callback callback = dummyCallback;
     private MyListAdapter adapter;
+    private static int dt = 0;
+    private String date = "0000/00/00 - 00:00:00";
     /**
      * A callback interface. Called whenever a item has been selected.
      */
@@ -125,15 +131,55 @@ public class ArticleListFragment extends ListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup container) {
+            final ListContent.Item item = (ListContent.Item) getItem(position);
+            dt = 0;
+
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_article, container, false);
+               //if (date.subSequence(3,5)).date;
+                if (!item.date.equals("d")) {
+                    System.out.println(item.date.substring(8, 10));//.substring(3, 5));
+                    if (date.equals("")) {
+                        System.out.println("updating date");
+                        date = item.date;//.substring(8, 10);
+                        convertView = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_article_date, container, false);
+                        dt = 1;
+
+                    } else if (!date.equals("") &&
+                            Integer.parseInt(date.substring(8,10)) != Integer.parseInt(item.date.substring(8,10))) {
+                        System.out.println("updating with new date");
+                        date = item.date;//.substring(8, 10);
+                        convertView = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_article_date, container, false);
+                        dt = 1;
+
+                    } else {
+                        System.out.println("date is the same");
+                        convertView = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_article, container, false);
+                        dt = 0;
+                    }
+
+                }
+                if (dt == 0) {
+                    convertView = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_article, container, false);
+                    System.out.println("no date");
+                }
+                //if (dt == 0) {
+                //    dt++;
+                //} else {
+                  //  System.out.println("inflatinggggggggggggg");
+                //}
+                //convertView = LayoutInflater.from(getActivity()).inflate(R.layout.list_item_article_date, container, false);
             }
 
             //final DummyContent.DummyItem item = (DummyContent.DummyItem) getItem(position);
-            final ListContent.Item item = (ListContent.Item) getItem(position);
             ((TextView) convertView.findViewById(R.id.article_title)).setText(item.store);
             ((TextView) convertView.findViewById(R.id.article_subtitle)).setText(""+item.amount);
+            if (dt == 1) {
+                ((TextView) convertView.findViewById(R.id.date)).setText(item.date);
+                //dt++;
+            }
+
             final ImageView img = (ImageView) convertView.findViewById(R.id.thumbnail);
+
             Glide.with(getActivity()).load(item.photoId).asBitmap().fitCenter().into(new BitmapImageViewTarget(img) {
                 @Override
                 protected void setResource(Bitmap resource) {

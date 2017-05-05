@@ -8,6 +8,15 @@
     <string-array name="names_values_array">
         <item>0</item>
         <item>1</item>
+    </string-array>
 
+    <string-array name="keep_array">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string-array name="keep_values_array">
+        <item>1</item>
+        <item>0</item>
     </string-array>
 </resources>

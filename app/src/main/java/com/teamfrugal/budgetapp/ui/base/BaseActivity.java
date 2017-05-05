@@ -58,7 +58,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         View header = navigationView.getHeaderView(0);
         TextView total = (TextView)header.findViewById(R.id.textView);
-        total.setText("-$" + ListContent.total);
+        total.setText("$" + String.valueOf(ListContent.total).substring(0, 7));
+        //total.setText("$"+ListContent.total);
 
         if (navigationView != null) {
             setupDrawerSelectListener(navigationView);

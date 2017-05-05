@@ -31,6 +31,7 @@ import java.io.StringWriter;
 
 import static com.teamfrugal.budgetapp.camera.ImgUtil.createBinary;
 import static com.teamfrugal.budgetapp.dummy.DummyContent.addItem;
+import static com.teamfrugal.budgetapp.ui.SettingsActivity.KEY_IMG_MODE;
 import static com.teamfrugal.budgetapp.ui.SettingsActivity.KEY_OCR_MODE;
 
 /**
@@ -52,6 +53,7 @@ public class ocrInterface extends AsyncTask<Void, Integer, String> {
     // MODE == 1 for Server Processing
     //private int MODE = 0;
     private int mode;
+    private int mode2;
     ProgressBar mp[] = new ProgressBar[2];
     int sPressed, aPressed;
     ocrInterface(Context cc, TessBaseAPI mTess, Bitmap bitmap, TextView text, TextView sText,
@@ -67,6 +69,7 @@ public class ocrInterface extends AsyncTask<Void, Integer, String> {
         //SharedPreferences.Editor editor = mSharedPreferences.edit();
         //editor.putString("KEY_OCR_MODE", "grr");
         mode = Integer.parseInt(mSharedPreferences.getString(KEY_OCR_MODE, "0"));
+        mode2 = Integer.parseInt(mSharedPreferences.getString(KEY_IMG_MODE, "0"));
 
         System.out.println("Mode <----> " + mode);
 
