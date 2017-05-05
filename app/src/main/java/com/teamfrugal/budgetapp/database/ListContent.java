@@ -34,8 +34,11 @@ public class ListContent extends BaseActivity {
     private Cursor cursor;
     public static Item newest;
 
+
     NumberFormat nf = NumberFormat.getCurrencyInstance();
-static Context con;
+    static Context con;
+
+
     TextView tTextView;
     public static double total;
 
@@ -55,6 +58,7 @@ static Context con;
             da = new DataAccess(con);
             da.open();
             //da.drop();
+            //da.insertTest();
             System.out.println("opening");
             cursor = da.query();
             System.out.println("querying");
@@ -64,13 +68,17 @@ static Context con;
                 System.out.println("CURSOR NOT NULL"    );
                 if  (cursor.moveToFirst()) {
                     do {
+                        Item item;
                         System.out.println("item");
                         String isExpense = "";
                         int id = cursor.getInt(0);
                         String store = cursor.getString(1);
                         Double amount = cursor.getDouble(2);
+                        int type = cursor.getInt(5);
+                        String date = cursor.getString(6);
 
                         System.out.println("ST-----> " +store + " ::::: " + amount);
+
                         System.out.println(cursor.getString(5));
                         if(cursor.getString(5).compareTo("expense") == 0) {
                             total -= amount;
@@ -81,12 +89,15 @@ static Context con;
                             isExpense = "Income";
                             System.out.println("TOTAL IS: " + total);
                         }
-                        Item item = new Item(id, randPhotoId(), store, amount, isExpense);
+                        System.out.println("dt: " + date.substring(0, 10));
+                        date = date.substring(0,10).replace("-", "/");
+                        item = new Item(id, R.drawable.ic_remove, store, amount, isExpense, date);
+
                         results.add(item);
                         ITEM_MAP.put(""+id, item);
 
 
-                    }while (cursor.moveToNext());
+                    } while (cursor.moveToNext());
                 }
             }
 
@@ -143,21 +154,25 @@ static Context con;
         public final String store;
         public final double amount;
         public final String isExpense;
+        public final String date;
 
-        public Item(int id, int photoId, String store, double amount) {
+
+        public Item(int id, int photoId, String store, double amount, String date) {
             this.id = id;
             this.photoId = photoId;
             this.store = store;
             this.amount = amount;
+            this.date = date;
             this.isExpense = "Expense";
         }
 
-        public Item(int id, int photoId, String store, double amount, String isExpense) {
+        public Item(int id, int photoId, String store, double amount, String isExpense, String date) {
             this.id = id;
             this.photoId = photoId;
             this.store = store;
             this.amount = amount;
             this.isExpense = isExpense;
+            this.date = date;
         }
     }
 }

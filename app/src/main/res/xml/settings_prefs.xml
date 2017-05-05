@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference
-        android:key="@string/pref_settings_1_key"
-        android:title="@string/pref_settings_1_title"
-        android:summary="@string/pref_settings_1_description"
-        android:defaultValue="false" />
+    <ListPreference
+        android:key="storeImg"
+        android:title="Keep Receipts"
+        android:summary="Would you like to store receipts captured?"
+        android:entries="@array/keep_array"
+        android:entryValues="@array/keep_values_array"
+        android:defaultValue="0" />
 
     <ListPreference
         android:title="OCR Processing"

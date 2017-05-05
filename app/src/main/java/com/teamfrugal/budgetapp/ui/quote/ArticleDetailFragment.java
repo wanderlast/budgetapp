@@ -1,6 +1,9 @@
 package com.teamfrugal.budgetapp.ui.quote;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -20,6 +23,9 @@ import com.teamfrugal.budgetapp.database.ListContent;
 import com.teamfrugal.budgetapp.dummy.DummyContent;
 import com.teamfrugal.budgetapp.ui.base.BaseActivity;
 import com.teamfrugal.budgetapp.ui.base.BaseFragment;
+
+import java.io.File;
+
 
 /**
  * Shows the quote detail page.
@@ -42,15 +48,14 @@ public class ArticleDetailFragment extends BaseFragment {
     @Bind(R.id.amount)
     TextView amount;
 
-    @Bind(R.id.backdrop)
-    ImageView backdropImg;
-
-    @Bind(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
+    @Bind(R.id.store2)
+    TextView store2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // load dummy item by using the passed item ID.
@@ -68,23 +73,21 @@ public class ArticleDetailFragment extends BaseFragment {
         if (!((BaseActivity) getActivity()).providesActivityToolbar()) {
             // No Toolbar present. Set include_toolbar:
             ((BaseActivity) getActivity()).setToolbar((Toolbar) rootView.findViewById(R.id.toolbar));
+            ((BaseActivity) getActivity()).getSupportActionBar().setTitle("Transaction Details");
         }
 
        // if (dummyItem != null) {
         if (listItem != null) {
-            loadBackdrop();
-            //collapsingToolbar.setTitle("Store: " + dummyItem.title);
+          //collapsingToolbar.setTitle("Store: " + dummyItem.title);
             //amount.setText("Amount: " + dummyItem.author);
-            collapsingToolbar.setTitle("Store: " + listItem.store);
+            //collapsingToolbar.setTitle("Store: " + listItem.store);
+            store2.setText("Store: "  + listItem.store);
             amount.setText("Amount: " + listItem.amount);
         }
 
-        return rootView;
-    }
 
-    private void loadBackdrop() {
-        //Glide.with(this).load(dummyItem.photoId).centerCrop().into(backdropImg);
-        Glide.with(this).load(listItem.photoId).centerCrop().into(backdropImg);
+
+        return rootView;
     }
 
     @Override
@@ -109,6 +112,22 @@ public class ArticleDetailFragment extends BaseFragment {
         args.putString(ArticleDetailFragment.ARG_ITEM_ID, itemID);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        final ImageView rec = (ImageView) getActivity().findViewById(R.id.rec);
+        System.out.println("meti " + listItem.id);
+        File receipt = new  File(Environment.getExternalStorageDirectory() + "/Receipts/" + listItem.id + ".jpeg");
+
+        if(receipt.exists()){
+            Bitmap mReceipt = BitmapFactory.decodeFile(receipt.getAbsolutePath());
+            rec.setImageBitmap(mReceipt);
+        } else {
+            System.out.println("fuck");
+        }
     }
 
     public ArticleDetailFragment() {}

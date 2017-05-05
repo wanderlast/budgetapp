@@ -45,12 +45,23 @@ public class DataAccess {
 
     // grabbing all items?
     public Cursor query() {
-        System.out.println(database.rawQuery("SELECT * FROM transactionA",null));
-        return database.rawQuery("SELECT * FROM transactionA",null);
+        System.out.println(database.rawQuery("SELECT * FROM transactionA ORDER BY " + COLUMN_transID + " DESC ",null));
+        return database.rawQuery("SELECT * FROM transactionA ORDER BY " + COLUMN_transID + " DESC",null);
     }
     public void drop() {
         database.execSQL("DROP TABLE if exists transactionA");
         database.execSQL(SQLiteHelper.CREATE_DB);
+    }
+
+    public void insertTest() {
+
+        //final String SQL_ADD = "INSERT INTO transactionA Values (" + 0 + ", 'Deposit', '" + 1000
+        //        + "', 'a', 'Deposit' , '0', '2017/04/28' );";
+        //this.getDatabase().execSQL(SQL_ADD);
+
+        final String SQL_ADD = "INSERT INTO transactionA Values (" + 1 + ", 'Starbucks', '" + 20
+                + "', 'a', 'Entertainment' , '1', '2017/05/01' );";
+        this.getDatabase().execSQL(SQL_ADD);
     }
 
     public static int nextId() {

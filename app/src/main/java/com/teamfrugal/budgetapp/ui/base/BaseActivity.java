@@ -63,6 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         TextView total = (TextView)header.findViewById(R.id.textView);
         total.setText(nf.format(ListContent.total));
 
+
         if (navigationView != null) {
             setupDrawerSelectListener(navigationView);
             setSelectedItem(navigationView);

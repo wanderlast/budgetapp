@@ -20,6 +20,7 @@ import com.teamfrugal.budgetapp.ui.base.BaseActivity;
 public class SettingsActivity extends BaseActivity  {
 
     public static final String KEY_OCR_MODE = "ocrMode";
+    public static final String KEY_IMG_MODE = "storeImg";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

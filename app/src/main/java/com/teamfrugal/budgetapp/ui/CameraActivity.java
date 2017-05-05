@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.util.Util;
 import com.teamfrugal.budgetapp.R;
 import com.teamfrugal.budgetapp.camera.CameraPreview;
 
@@ -92,13 +93,13 @@ public class CameraActivity extends AppCompatActivity {
             BitmapFactory.Options op = new BitmapFactory.Options();
             Bitmap bm = BitmapFactory.decodeByteArray(data,0, data.length, op);
 
-
             if (bm.getHeight() == 1080) {
                 try {
                     System.out.println("rotating 1080");
 
                     Matrix matrix = new Matrix();
-                    matrix.setRotate(90, 1080, 1920);
+                    //matrix.setRotate(90, 1080, 1920);
+                    matrix.postRotate(90);
 
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, 1920, 1080, matrix, true);
                     FileOutputStream ff = new FileOutputStream(f);
@@ -112,9 +113,10 @@ public class CameraActivity extends AppCompatActivity {
                     System.out.println("rotating 1440");
 
                     Matrix matrix = new Matrix();
-                    matrix.setRotate(90, 1440, 2560);
+                    //matrix.setRotate(90, 1440, 2560);
+                    matrix.postRotate(90);
 
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, 2560, 1440, matrix, true);
+                    Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
                     FileOutputStream ff = new FileOutputStream(f);
 
                     rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, ff);
