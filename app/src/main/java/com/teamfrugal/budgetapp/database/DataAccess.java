@@ -60,7 +60,7 @@ public class DataAccess {
         //this.getDatabase().execSQL(SQL_ADD);
 
         final String SQL_ADD = "INSERT INTO transactionA Values (" + 1 + ", 'Starbucks', '" + 20
-                + "', 'a', 'Entertainment' , '1', '2017/05/01' );";
+                + "', 'a', 'Entertainment' , 'expense', '2017/05/01' );";
         this.getDatabase().execSQL(SQL_ADD);
     }
 

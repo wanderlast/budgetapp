@@ -74,13 +74,12 @@ public class ListContent extends BaseActivity {
                         int id = cursor.getInt(0);
                         String store = cursor.getString(1);
                         Double amount = cursor.getDouble(2);
-                        int type = cursor.getInt(5);
                         String date = cursor.getString(6);
 
-                        System.out.println("ST-----> " +store + " ::::: " + amount);
+                        System.out.println("ST-----> " + store + " ::::: " + amount);
 
                         System.out.println(cursor.getString(5));
-                        if(cursor.getString(5).compareTo("expense") == 0) {
+                        if (cursor.getString(5).compareTo("expense") == 0) {
                             total -= amount;
                             isExpense = "Expense";
                             System.out.println("TOTAL IS (after income): " + total);
@@ -90,9 +89,12 @@ public class ListContent extends BaseActivity {
                             System.out.println("TOTAL IS: " + total);
                         }
                         System.out.println("dt: " + date.substring(0, 10));
-                        date = date.substring(0,10).replace("-", "/");
-                        item = new Item(id, R.drawable.ic_remove, store, amount, isExpense, date);
-
+                        date = date.substring(0, 10).replace("-", "/");
+                        if (isExpense.compareTo("Expense") == 0) {
+                            item = new Item(id, R.drawable.ic_remove, store, amount, isExpense, date);
+                        } else{
+                            item = new Item(id, R.drawable.ic_add, store, amount, isExpense, date);
+                        }
                         results.add(item);
                         ITEM_MAP.put(""+id, item);
 
