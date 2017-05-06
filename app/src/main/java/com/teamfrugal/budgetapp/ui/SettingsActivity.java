@@ -12,6 +12,11 @@ import android.view.MenuItem;
 import com.teamfrugal.budgetapp.R;
 import com.teamfrugal.budgetapp.ui.base.BaseActivity;
 
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+import java.util.Locale;
+
 /**
  * This Activity provides several settings. Activity contains {@link PreferenceFragment} as inner class.
  *
@@ -21,6 +26,7 @@ public class SettingsActivity extends BaseActivity  {
 
     public static final String KEY_OCR_MODE = "ocrMode";
     public static final String KEY_IMG_MODE = "storeImg";
+    public static final String KEY_LOCALE = "locale";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +102,9 @@ public class SettingsActivity extends BaseActivity  {
                 System.out.println("changed <----->");
                 //System.out.println(sharedPreferences.getString(key, ""));
                 //ocrPref.setSummary(sharedPreferences.getString(key, "sdfsdf"));
+            } else if (key.equals(KEY_LOCALE)){
+                //code for changing currency locale maybe?
+                //jNumberFormat nf = NumberFormat.getCurrencyInstance(Locale.UK);
             }
         }
     }

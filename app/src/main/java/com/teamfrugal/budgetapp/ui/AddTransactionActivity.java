@@ -8,9 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ import android.widget.Spinner;
 import com.teamfrugal.budgetapp.R;
 import com.teamfrugal.budgetapp.database.DataAccess;
 import com.teamfrugal.budgetapp.database.ListContent;
+import com.teamfrugal.budgetapp.database.SQLiteHelper;
 import com.teamfrugal.budgetapp.ui.quote.ListActivity;
 
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -132,9 +136,20 @@ public class AddTransactionActivity extends Activity implements OnItemSelectedLi
                 mDataAccess = new DataAccess(getApplicationContext());
                 mDataAccess.open();
                 //Transaction newTransaction = mDataAccess.newTransact(ListContent.newest.store, ListContent.newest.amount, "acct", mItemSelected , "type", "date");
-                final String SQL_ADD = "INSERT INTO transactionA Values (" + ListContent.newest.id + ", '" + ListContent.newest.store + "', '" + amount
-                        + "', " + "'a', '" + mItemSelected + "', '" + expenseName + "', DATETIME('now', 'localtime') );";
-                mDataAccess.getDatabase().execSQL(SQL_ADD);
+                ContentValues ins = new ContentValues();
+                ins.put(SQLiteHelper.COLUMN_transID, ListContent.newest.id);
+                ins.put(SQLiteHelper.COLUMN_name, ListContent.newest.store);
+                ins.put(SQLiteHelper.COLUMN_amount, amount);
+                ins.put(SQLiteHelper.COLUMN_account, "a");
+                ins.put(SQLiteHelper.COLUMN_category, mItemSelected);
+                ins.put(SQLiteHelper.COLUMN_type, expenseName);
+                SimpleDateFormat sdf = new SimpleDateFormat(("yyyy/MM/dd HH:mm:ss"));
+                String date = sdf.format(new Date());
+                ins.put(SQLiteHelper.COLUMN_datetime, date);
+                mDataAccess.getDatabase().insert(SQLiteHelper.TABLE_TRANSACTION, null, ins);
+//                final String SQL_ADD = "INSERT INTO transactionA Values (" + ListContent.newest.id + ", '" + ListContent.newest.store + "', '" + amount
+//                        + "', " + "'a', '" + mItemSelected + "', '" + expenseName + "', DATETIME('now', 'localtime') );";
+//                mDataAccess.getDatabase().execSQL(SQL_ADD);
                 //System.out.println("item added to db");
                 mDataAccess.close();
 

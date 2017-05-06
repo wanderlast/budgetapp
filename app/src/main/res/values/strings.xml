@@ -22,5 +22,6 @@
 
     <!-- Shared Preferences keys -->
     <string name="sp_key_ocr_mode">ocrMode</string>
+    <string name="sp_key_locale">locale</string>
 
 </resources>

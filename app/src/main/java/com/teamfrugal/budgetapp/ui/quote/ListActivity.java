@@ -60,8 +60,9 @@ public class ListActivity extends BaseActivity implements ArticleListFragment.Ca
         content.init(this, tTextView);
 
 
-//        DataAccess da = new DataAccess(this);
-//        da.open();
+        //DataAccess da = new DataAccess(this);
+        //da.open();
+        //da.insertTest();
 //        da.drop();
 
         if(!OpenCVLoader.initDebug()){

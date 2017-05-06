@@ -3,6 +3,7 @@ package com.teamfrugal.budgetapp.database;
 /* This is the DAO
  */
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -49,7 +50,8 @@ public class DataAccess {
         return database.rawQuery("SELECT * FROM transactionA ORDER BY " + COLUMN_transID + " DESC",null);
     }
     public void drop() {
-        database.execSQL("DROP TABLE if exists transactionA");
+        //drops table of the database and creates new one
+        database.execSQL("DROP TABLE if exists " + SQLiteHelper.TABLE_TRANSACTION);
         database.execSQL(SQLiteHelper.CREATE_DB);
     }
 
@@ -59,9 +61,19 @@ public class DataAccess {
         //        + "', 'a', 'Deposit' , '0', '2017/04/28' );";
         //this.getDatabase().execSQL(SQL_ADD);
 
-        final String SQL_ADD = "INSERT INTO transactionA Values (" + 1 + ", 'Starbucks', '" + 20
-                + "', 'a', 'Entertainment' , 'expense', '2017/05/01' );";
-        this.getDatabase().execSQL(SQL_ADD);
+        ContentValues test = new ContentValues();
+        test.put(SQLiteHelper.COLUMN_transID,DataAccess.nextId());
+        test.put(SQLiteHelper.COLUMN_name, "Starbucks");
+        test.put(SQLiteHelper.COLUMN_amount, 20.0);
+        test.put(SQLiteHelper.COLUMN_account, "a");
+        test.put(SQLiteHelper.COLUMN_category, "Entertainment");
+        test.put(SQLiteHelper.COLUMN_type, "expense");
+        test.put(SQLiteHelper.COLUMN_datetime, "2017/05/01");
+        //final String SQL_ADD = "INSERT INTO transactionA Values (" + 1 + ", 'Starbucks', '" + 20
+        //        + "', 'a', 'Entertainment' , 'expense', '2017/05/01' );";
+        //this.getDatabase().execSQL(SQL_ADD);
+        this.getDatabase().insert(SQLiteHelper.TABLE_TRANSACTION, null, test);
+        System.out.println("WE INSERTED IT :D");
     }
 
     public static int nextId() {
